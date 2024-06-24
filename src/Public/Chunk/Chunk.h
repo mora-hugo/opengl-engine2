@@ -38,55 +38,56 @@ namespace HC {
     private:
         void GenerateVerticesAndIndices();
     public:
-        const static inline std::array<Vertex, 4> front_face_vertices = {
+        constexpr static inline glm::vec2 texture_offset = {1.f/24, 1.f/34};
+        constexpr static inline std::array<Vertex, 4> front_face_vertices = {
                 // Front face
-                Vertex{{1.0f,  1.0f,  1.0f}, {1.f, 1.f, 1.f}, {1.f, 1.f}},
-                Vertex{{1.0f,  0.0f,  1.0f}, {1.f, 1.f, 1.f}, {1.f, 0.f}},
+                Vertex{{1.0f,  1.0f,  1.0f}, {1.f, 1.f, 1.f}, {texture_offset[0], texture_offset[1]}},
+                Vertex{{1.0f,  0.0f,  1.0f}, {1.f, 1.f, 1.f}, {texture_offset[0], 0.f}},
                 Vertex{{0.0f,  0.0f,  1.0f}, {1.f, 1.f, 1.f}, {0.f, 0.f}},
-                Vertex{{0.0f,  1.0f,  1.0f}, {1.f, 1.f, 1.f}, {0.f, 1.f}},
+                Vertex{{0.0f,  1.0f,  1.0f}, {1.f, 1.f, 1.f}, {0.f, texture_offset[1]}},
         };
 
-        const static inline std::array<Vertex, 4> back_face_vertices = {
+        constexpr static inline std::array<Vertex, 4> back_face_vertices = {
                 // Back face
-                Vertex{{0.0f,  0.0f,  0.0f}, {1.f, 1.f, 1.f}, {1.f, 0.f}},
+                Vertex{{0.0f,  0.0f,  0.0f}, {1.f, 1.f, 1.f}, {texture_offset[0], 0.f}},
                 Vertex{{1.0f,  0.0f,  0.0f}, {1.f, 1.f, 1.f}, {0.f, 0.f}},
-                Vertex{{1.0f,  1.0f,  0.0f}, {1.f, 1.f, 1.f}, {0.f, 1.f}},
-                Vertex{{0.0f,  1.0f,  0.0f}, {1.f, 1.f, 1.f}, {1.f, 1.f}},
+                Vertex{{1.0f,  1.0f,  0.0f}, {1.f, 1.f, 1.f}, {0.f, texture_offset[1]}},
+                Vertex{{0.0f,  1.0f,  0.0f}, {1.f, 1.f, 1.f}, {texture_offset[0],texture_offset[1]}},
         };
 
-        const static inline std::array<Vertex, 4> left_face_vertices = {
+        constexpr static inline std::array<Vertex, 4> left_face_vertices = {
                 // Left face
                 Vertex{{0.0f,  0.0f,  0.0f}, {1.f, 1.f, 1.f}, {0.f, 0.f}},
-                Vertex{{0.0f,  1.0f,  0.0f}, {1.f, 1.f, 1.f}, {0.f, 1.f}},
-                Vertex{{0.0f,  1.0f,  1.0f}, {1.f, 1.f, 1.f}, {1.f, 1.f}},
-                Vertex{{0.0f,  0.0f,  1.0f}, {1.f, 1.f, 1.f}, {1.f, 0.f}},
+                Vertex{{0.0f,  1.0f,  0.0f}, {1.f, 1.f, 1.f}, {0.f, texture_offset[1]}},
+                Vertex{{0.0f,  1.0f,  1.0f}, {1.f, 1.f, 1.f}, {texture_offset[0], texture_offset[1]}},
+                Vertex{{0.0f,  0.0f,  1.0f}, {1.f, 1.f, 1.f}, {texture_offset[0], 0.f}},
         };
 
-        const static inline std::array<Vertex, 4> right_face_vertices = {
+        constexpr static inline std::array<Vertex, 4> right_face_vertices = {
                 // Right face
-                Vertex{{1.0f,  0.0f,  0.0f}, {1.f, 1.f, 1.f}, {1.f, 0.f}},
+                Vertex{{1.0f,  0.0f,  0.0f}, {1.f, 1.f, 1.f}, {texture_offset[0], 0.f}},
                 Vertex{{1.0f,  0.0f,  1.0f}, {1.f, 1.f, 1.f}, {0.f, 0.f}},
-                Vertex{{1.0f,  1.0f,  1.0f}, {1.f, 1.f, 1.f}, {0.f, 1.f}},
-                Vertex{{1.0f,  1.0f,  0.0f}, {1.f, 1.f, 1.f}, {1.f, 1.f}},
+                Vertex{{1.0f,  1.0f,  1.0f}, {1.f, 1.f, 1.f}, {0.f, texture_offset[1]}},
+                Vertex{{1.0f,  1.0f,  0.0f}, {1.f, 1.f, 1.f}, {texture_offset[0], texture_offset[1]}},
         };
 
-        const static inline std::array<Vertex, 4> top_face_vertices = {
+        constexpr static inline std::array<Vertex, 4> top_face_vertices = {
                 // Top face
                 Vertex{{0.0f,  1.0f,  0.0f}, {1.f, 1.f, 1.f}, {0.f, 0.f}},
-                Vertex{{1.0f,  1.0f,  0.0f}, {1.f, 1.f, 1.f}, {1.f, 0.f}},
-                Vertex{{1.0f,  1.0f,  1.0f}, {1.f, 1.f, 1.f}, {1.f, 1.f}},
-                Vertex{{0.0f,  1.0f,  1.0f}, {1.f, 1.f, 1.f}, {0.f, 1.f}},
+                Vertex{{1.0f,  1.0f,  0.0f}, {1.f, 1.f, 1.f}, {texture_offset[0], 0.f}},
+                Vertex{{1.0f,  1.0f,  1.0f}, {1.f, 1.f, 1.f}, {texture_offset[0], texture_offset[1]}},
+                Vertex{{0.0f,  1.0f,  1.0f}, {1.f, 1.f, 1.f}, {0.f, texture_offset[1]}},
         };
 
-        const static inline std::array<Vertex, 4> bottom_face_vertices = {
+        constexpr static inline std::array<Vertex, 4> bottom_face_vertices = {
                 // Bottom face
-                Vertex{{0.0f,  0.0f,  1.0f}, {1.f, 1.f, 1.f}, {0.f, 1.f}},
-                Vertex{{1.0f,  0.0f,  1.0f}, {1.f, 1.f, 1.f}, {1.f, 1.f}},
-                Vertex{{1.0f,  0.0f,  0.0f}, {1.f, 1.f, 1.f}, {1.f, 0.f}},
+                Vertex{{0.0f,  0.0f,  1.0f}, {1.f, 1.f, 1.f}, {0.f, texture_offset[1]}},
+                Vertex{{1.0f,  0.0f,  1.0f}, {1.f, 1.f, 1.f}, {texture_offset[0], texture_offset[1]}},
+                Vertex{{1.0f,  0.0f,  0.0f}, {1.f, 1.f, 1.f}, {texture_offset[0], 0.f}},
                 Vertex{{0.0f,  0.0f,  0.0f}, {1.f, 1.f, 1.f}, {0.f, 0.f}},
         };
 
-        const static inline std::array<GLuint, 6> block_indices = {
+        constexpr static inline std::array<GLuint, 6> block_indices = {
                 // Front face
                 0, 1, 2,
                 2, 3, 0,

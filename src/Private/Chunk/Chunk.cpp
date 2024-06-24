@@ -9,7 +9,9 @@ namespace HC {
     void Chunk::Initialize() {
         for (int i = 0; i < CHUNK_SIZE_CUBED; i++) {
             if(GET_COORDS_FROM_INDEX(i).y < 25) {
-                blocks[i] = 1;
+                //Random between 1 and 255
+                Block random = (rand() % 5 + 1);
+                blocks[i] = random;
             }
             else {
                 blocks[i] = 0;
@@ -43,12 +45,14 @@ namespace HC {
         my_indices.clear();
         for (int i = 0; i < CHUNK_SIZE_CUBED; i++) {
             glm::vec3 coords = GET_COORDS_FROM_INDEX(i);
+            Block block = blocks[i];
             if (blocks[i] != 0) {  // Only process non-zero blocks
                 // Front face
                 if (GetBlockAt(coords.x, coords.y, coords.z + 1) == 0) {
                     for (auto vertex : front_face_vertices) {
                         Vertex v = vertex;  // Make a copy of the vertex
                         v.position += coords ;  // Adjust position
+                        v.texCoord += texture_offset * (float)(block-1);
                         v.position += (glm::ivec3(position.x, 0, position.y) * CHUNK_SIZE);
                         vec.push_back(v);
                     }
@@ -63,6 +67,7 @@ namespace HC {
                     for (auto vertex : back_face_vertices) {
                         Vertex v = vertex;
                         v.position += coords;
+                        v.texCoord += texture_offset * (float)(block-1);
                         v.position += (glm::ivec3(position.x, 0, position.y) * CHUNK_SIZE);
                         vec.push_back(v);
                     }
@@ -77,6 +82,7 @@ namespace HC {
                     for (auto vertex : left_face_vertices) {
                         Vertex v = vertex;
                         v.position += coords;
+                        v.texCoord += texture_offset * (float)(block-1);
                         v.position += (glm::ivec3(position.x, 0, position.y) * CHUNK_SIZE);
                         vec.push_back(v);
                     }
@@ -90,6 +96,7 @@ namespace HC {
                 if (GetBlockAt(coords.x + 1, coords.y, coords.z) == 0) {
                     for (auto vertex : right_face_vertices) {
                         Vertex v = vertex;
+                        v.texCoord += texture_offset * (float)(block-1);
                         v.position += coords;
                         v.position += (glm::ivec3(position.x, 0, position.y) * CHUNK_SIZE);
                         vec.push_back(v);
@@ -104,6 +111,7 @@ namespace HC {
                 if (GetBlockAt(coords.x, coords.y + 1, coords.z) == 0) {
                     for (auto vertex : top_face_vertices) {
                         Vertex v = vertex;
+                        v.texCoord += texture_offset * (float)(block-1);
                         v.position += coords;
                         v.position += (glm::ivec3(position.x, 0, position.y) * CHUNK_SIZE);
                         vec.push_back(v);
@@ -118,6 +126,7 @@ namespace HC {
                 if (GetBlockAt(coords.x, coords.y - 1, coords.z) == 0) {
                     for (auto vertex : bottom_face_vertices) {
                         Vertex v = vertex;
+                        v.texCoord += texture_offset * (float)(block-1);
                         v.position += coords;
                         v.position += (glm::ivec3(position.x, 0, position.y) * CHUNK_SIZE);
                         vec.push_back(v);

@@ -54,7 +54,7 @@ namespace HC {
         program.DeleteShader(shaders.GetVertexShaderId());
         program.DeleteShader(shaders.GetFragmentShaderId());
 
-        std::shared_ptr<TextureData> textureData = Model::LoadTexture("../resources/textures/container.jpg");
+        std::shared_ptr<TextureData> textureData = Model::LoadTexture("../resources/textures/spritesheet.jpg");
         GLuint TextureId = Model::CREATE_TEXTURE(textureData);
         Model::BIND_TEXTURE(TextureId);
 
