@@ -40,7 +40,9 @@ Block HC::ChunkManager::GetWorldBlockAt(int x, int y, int z) const {
     }
 }
 
-glm::ivec3 HC::ChunkManager::ChunkRayCast(const glm::vec3 &origin, const glm::vec3 &direction, float maxDistance) {
+bool HC::ChunkManager::ChunkRayCast(const glm::vec3 &origin, const glm::vec3 &direction, float maxDistance, glm::vec3 & outHitPos, glm::vec3 & outHitNormal) {
+
+    //Bresenham's line algorithm
     glm::vec3 end = origin + direction * maxDistance;
 
     glm::ivec3 startPos = glm::floor(origin);
@@ -66,25 +68,30 @@ glm::ivec3 HC::ChunkManager::ChunkRayCast(const glm::vec3 &origin, const glm::ve
         sideDist.z = (origin.z - startPos.z) * deltaDist.z;
 
     glm::ivec3 currentPos = startPos;
-
+    glm::vec3 hitNormal{0.f};
     while (glm::length(glm::vec3(currentPos) - origin) < maxDistance) {
         if (GetWorldBlockAt(currentPos.x, currentPos.y, currentPos.z) != 0) {
-            return currentPos; // Retourner la position du premier bloc touché
+            outHitPos = currentPos;
+            outHitNormal = hitNormal;
+            return true;
         }
 
         if (sideDist.x < sideDist.y && sideDist.x < sideDist.z) {
             sideDist.x += deltaDist.x;
             currentPos.x += directionSign.x;
+            hitNormal = glm::vec3(-directionSign.x, 0, 0);
         } else if (sideDist.y < sideDist.z) {
             sideDist.y += deltaDist.y;
             currentPos.y += directionSign.y;
+            hitNormal = glm::vec3(0, -directionSign.y, 0);
         } else {
             sideDist.z += deltaDist.z;
             currentPos.z += directionSign.z;
+            hitNormal = glm::vec3(0, 0, -directionSign.z);
         }
     }
 
-    return endPos; // Si aucun bloc n'est touché, retourner la position de fin
+    return false; // Si aucun bloc n'est touché, retourner la position de fin
 }
 
 void HC::ChunkManager::SetBlockAt(const glm::ivec3 &position, Block block) {

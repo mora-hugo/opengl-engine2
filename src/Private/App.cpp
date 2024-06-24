@@ -5,19 +5,14 @@
 #include <valarray>
 
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+
 
 #include "App.h"
-#include "Utils.h"
 #include "Shader.h"
 #include "Program.h"
 #include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
 #include "Model.h"
 #include "Shaders.h"
-#include "Chunk/Chunk.h"
 #include "Tests/Test.h"
 #include "Guizmo.h"
 #include "Chunk/ChunkManager.h"
@@ -64,12 +59,8 @@ namespace HC {
         Model::BIND_TEXTURE(TextureId);
 
         glm::mat4 trans = glm::mat4(1.0f);
-
         SetupInput();
-
         chunkManager->Initialize();
-
-
 
 
         textureData->Free();
@@ -77,25 +68,29 @@ namespace HC {
         auto currentTime = std::chrono::high_resolution_clock::now();
         auto previousTime = currentTime;
         float deltaTime = 0.f;
+        program.Use();
         while (!glfwWindowShouldClose(window->GetGLFWWindow())) {
             glfwPollEvents();
 
             inputManager->ProcessInput();
-            window->ImGUIFrameBegin();
 
-            ShowFPSUsingImGui(deltaTime);
+            ShowImGui(deltaTime);
+
+
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            program.Use();
+
             chunkManager->Draw();
-            lastRayCastBlock = chunkManager->ChunkRayCast(camera->GetPosition(), camera->GetForward(), 100.f);
+
+            if(!(bBlockDetected = chunkManager->ChunkRayCast(camera->GetPosition(), camera->GetForward(), interactionDistance, lastRayCastBlock, lastHitBlockNormal))) {
+                lastRayCastBlock = glm::vec3(0, 0, 0);
+                lastHitBlockNormal = glm::vec3(0, 0, 0);
+            }
 
             window->ImGUIRender();
+            ShowGizmo();
 
 
-            Guizmo::GetInstance()->DrawCube(lastRayCastBlock, lastRayCastBlock + glm::vec3({1.f, 1.f, 1.f}), {1.f, 0.f, 0.f});
-            //Guizmo::GetInstance()->DrawLine(camera->GetPosition()+glm::vec3(0,-0.1,0), camera->GetPosition() + camera->GetForward() * 10.f, {1.f, 0.f, 0.f});
-            Guizmo::GetInstance()->ProcessDraw();
             glfwSwapBuffers(window->GetGLFWWindow());
 
             /* Calculate delta time */
@@ -121,7 +116,8 @@ namespace HC {
 
     }
 
-    void App::ShowFPSUsingImGui(double deltaTime) {
+    void App::ShowImGui(double deltaTime) {
+        window->ImGUIFrameBegin();
         static float fps = 0.f;
         static float frameTime = 0.f;
         static float frameTimeAverage = 0.f;
@@ -142,6 +138,23 @@ namespace HC {
             ImGui::SliderFloat("View distance", camera->GetViewDistancePtr(), 1.f, 10000.f);
             ImGui::SliderFloat("Movement Speed", camera->GetMovementSpeedPtr(), 0.01f, 1.f);
             ImGui::SliderFloat("Rotation Speed", camera->GetRotationSpeedPtr(), 0.01f, 1.f);
+        }
+
+        if(ImGui::CollapsingHeader("Guizmo")) {
+            ImGui::Checkbox("Show Gizmo", &bShowGizmo);
+            if(bShowGizmo) {
+                ImGui::Checkbox("Show Block Wireframe", &bShowBlockWireframe);
+                ImGui::Checkbox("Show Normals", &bShowNormals);
+                ImGui::Checkbox("Show Line Trace", &bShowLineTrace);
+            }
+        }
+
+        if(ImGui::CollapsingHeader("Chunk Manager")) {
+            ImGui::Text("Chunks: %d", chunkManager->GetChunkCount());
+        }
+
+        if(ImGui::CollapsingHeader("Interaction")) {
+            ImGui::SliderFloat("Interaction Distance", &interactionDistance, 1.f, 100.f);
         }
 
         ImGui::End();
@@ -191,6 +204,10 @@ namespace HC {
             chunkManager->SetBlockAt(lastRayCastBlock, 0);
         });
 
+        inputManager->AddMouseCallback(GLFW_MOUSE_BUTTON_RIGHT, MouseAction::VP_MOUSE_PRESSED, this, [&](glm::vec2 offset) {
+            chunkManager->SetBlockAt(lastRayCastBlock+lastHitBlockNormal, 1);
+        });
+
         inputManager->AddMouseCallback(0, MouseAction::VP_MOUSE_MOVE, this, [&](glm::vec2 pos) {
             if(glfwGetInputMode(window->GetGLFWWindow(), GLFW_CURSOR) == GLFW_CURSOR_NORMAL) {
                 return;
@@ -202,9 +219,22 @@ namespace HC {
         });
     }
 
+    void App::ShowGizmo() {
+        if(!bShowGizmo) {
+            return;
+        }
+        if(bShowBlockWireframe && bBlockDetected) {
+            Guizmo::GetInstance()->DrawCube(lastRayCastBlock, lastRayCastBlock + glm::vec3({1.f, 1.f, 1.f}), {1.f, 0.f, 0.f});
+        }
+        if(bShowNormals) {
+            Guizmo::GetInstance()->DrawLine((lastRayCastBlock+glm::vec3{0.5f, 0.5f, 0.5f}+lastHitBlockNormal), (lastRayCastBlock +glm::vec3{0.5f, 0.5f, 0.5f}) + (lastHitBlockNormal*0.f), {0.f, 1.f, 0.f});
+        }
+        if(bShowLineTrace) {
+            Guizmo::GetInstance()->DrawLine(camera->GetPosition()+glm::vec3(0,-0.1,0), camera->GetPosition() + camera->GetForward() * 10.f, {1.f, 0.f, 0.f});
+        }
 
-
-
+        Guizmo::GetInstance()->ProcessDraw();
+    }
 
 
 } // HC

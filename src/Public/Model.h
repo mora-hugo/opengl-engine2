@@ -62,8 +62,8 @@ namespace HC {
 
 
     private:
-        size_t vertexCount = 0;
-        size_t indexCount = 0;
+        GLsizei vertexCount = 0;
+        GLsizei indexCount = 0;
         bool bUsingIndexBuffer = false;
 
         GLuint VBO, VAO, EBO;

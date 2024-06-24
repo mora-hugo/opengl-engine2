@@ -54,10 +54,10 @@ namespace HC {
                 position += right * MovementSpeed;
                 break;
             case CameraMovement::UP:
-                position += up * MovementSpeed;
+                position += glm::vec3(0.f, 1.f, 0.f) * MovementSpeed;
                 break;
             case CameraMovement::DOWN:
-                position -= up * MovementSpeed;
+                position -= glm::vec3(0.f, 1.f, 0.f) * MovementSpeed;
                 break;
         }
         UpdateVectors();

@@ -8,7 +8,12 @@
 namespace HC {
     void Chunk::Initialize() {
         for (int i = 0; i < CHUNK_SIZE_CUBED; i++) {
-            blocks[i] = 1;
+            if(GET_COORDS_FROM_INDEX(i).y < 10) {
+                blocks[i] = 1;
+            }
+            else {
+                blocks[i] = 0;
+            }
         }
         GenerateVerticesAndIndices();
         model = std::make_unique<Model>(vec, my_indices);

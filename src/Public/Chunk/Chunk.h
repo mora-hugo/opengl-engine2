@@ -5,6 +5,7 @@
 #include "Model.h"
 #include "ChunkManager.h"
 #define CHUNK_SIZE 16
+#define ChUNK_SIZE_HEIGHT 128
 #define CHUNK_SIZE_SQUARED (CHUNK_SIZE * CHUNK_SIZE)
 #define CHUNK_SIZE_CUBED (CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
 #define GET_CUBE(x, y, z) ((x) + (y) * CHUNK_SIZE + (z) * CHUNK_SIZE_SQUARED)
@@ -24,7 +25,6 @@ namespace HC {
         void Draw();
         [[nodiscard]] Block GetBlockAt(int x, int y, int z) const;
         void SetBlockAt(int x, int y, int z, Block block);
-
 
     protected:
         std::array<Block, CHUNK_SIZE_CUBED> blocks;

@@ -19,14 +19,25 @@ namespace HC {
     protected:
         void SetupInput();
     private:
-        void ShowFPSUsingImGui(double deltaTime);
+        void ShowImGui(double deltaTime);
+        void ShowGizmo();
+
     private:
         std::unique_ptr<Window> window;
         std::unique_ptr<InputManager> inputManager;
         std::unique_ptr<Camera> camera;
         glm::vec2 lastMousePosition{0.f, 0.f};
         glm::vec3 lastRayCastBlock{0, 0, 0};
+        glm::vec3 lastHitBlockNormal{0, 0, 0};
         std::unique_ptr<ChunkManager> chunkManager;
+        bool bBlockDetected = false;
+        /* ImGui */
+        bool bShowGizmo = true;
+        bool bShowNormals = true;
+        bool bShowBlockWireframe = true;
+        bool bShowLineTrace = false;
+        float interactionDistance = 10.f;
+
     public:
 
 

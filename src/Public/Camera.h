@@ -47,8 +47,8 @@ namespace HC {
     protected:
         float Fov = 45.0f;
         float viewDistance = 100.0f;
-        float MovementSpeed = 0.01f;
-            float RotationSpeed = 0.4f;
+        float MovementSpeed = 0.1f;
+        float RotationSpeed = 0.4f;
 
 
         glm::vec2 viewportSize{800.f, 600.f};
