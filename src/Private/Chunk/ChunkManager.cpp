@@ -14,8 +14,8 @@ void HC::ChunkManager::Draw() {
 }
 
 void HC::ChunkManager::Initialize() {
-    for(int i = 0; i < 10; i++) {
-        for(int j = 0; j < 10; j++) {
+    for(int i = 0; i < 4; i++) {
+        for(int j = 0; j < 4; j++) {
 
             std::unique_ptr<Chunk> chunk = std::make_unique<Chunk>(glm::ivec2(i, j), *this);
             chunk->Initialize();

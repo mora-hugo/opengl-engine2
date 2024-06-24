@@ -8,7 +8,7 @@
 namespace HC {
     void Chunk::Initialize() {
         for (int i = 0; i < CHUNK_SIZE_CUBED; i++) {
-            if(GET_COORDS_FROM_INDEX(i).y < 10) {
+            if(GET_COORDS_FROM_INDEX(i).y < 25) {
                 blocks[i] = 1;
             }
             else {
@@ -134,14 +134,14 @@ namespace HC {
     }
 
     Block Chunk::GetBlockAt(int x, int y, int z) const {
-        if (x < 0 || x >= CHUNK_SIZE || y < 0 || y >= CHUNK_SIZE || z < 0 || z >= CHUNK_SIZE) {
+        if (x < 0 || x >= CHUNK_SIZE || y < 0 || y >= CHUNK_SIZE_HEIGHT || z < 0 || z >= CHUNK_SIZE) {
             return 0;
         }
         return blocks[GET_CUBE(x, y, z)];
     }
 
     void Chunk::SetBlockAt(int x, int y, int z, Block block) {
-        if (x < 0 || x >= CHUNK_SIZE || y < 0 || y >= CHUNK_SIZE || z < 0 || z >= CHUNK_SIZE) {
+        if (x < 0 || x >= CHUNK_SIZE || y < 0 || y >= CHUNK_SIZE_HEIGHT || z < 0 || z >= CHUNK_SIZE) {
             return;
         }
         bIsDirty = true;

@@ -5,10 +5,10 @@
 #include "Model.h"
 #include "ChunkManager.h"
 #define CHUNK_SIZE 16
-#define ChUNK_SIZE_HEIGHT 128
-#define CHUNK_SIZE_CUBED (CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
-#define GET_CUBE(x, y, z) ((x) + (y) * CHUNK_SIZE + (z) * (CHUNK_SIZE*CHUNK_SIZE))
-#define GET_COORDS_FROM_INDEX(index) glm::ivec3(index % CHUNK_SIZE, (index / CHUNK_SIZE) % CHUNK_SIZE, index / (CHUNK_SIZE*CHUNK_SIZE))
+#define CHUNK_SIZE_HEIGHT 128
+#define CHUNK_SIZE_CUBED (CHUNK_SIZE * CHUNK_SIZE_HEIGHT * CHUNK_SIZE)
+#define GET_CUBE(x, y, z) ((x) + (z) * CHUNK_SIZE + (y) * (CHUNK_SIZE*CHUNK_SIZE))
+#define GET_COORDS_FROM_INDEX(index) glm::ivec3((index) % CHUNK_SIZE, (index) / (CHUNK_SIZE*CHUNK_SIZE), ((index) / CHUNK_SIZE) % CHUNK_SIZE)
 
 using Block = uint8_t;
 namespace HC {
