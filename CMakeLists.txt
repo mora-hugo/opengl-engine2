@@ -25,6 +25,8 @@ add_executable(opengl-imgui-cmake-template ${SOURCES} src/Private/App.cpp src/Pr
         src/Public/InputManager.h
         src/Public/Camera.h
         src/Public/Tests/Test.h
+        src/Public/Chunk/ChunkManager.h
+        src/Public/Guizmo.h
 )
 
 find_package(OpenGL REQUIRED)

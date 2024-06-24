@@ -19,6 +19,9 @@
 #include "Shaders.h"
 #include "Chunk/Chunk.h"
 #include "Tests/Test.h"
+#include "Guizmo.h"
+#include "Chunk/ChunkManager.h"
+
 namespace HC {
     bool HC::App::InitializeOpenGL() {
         return gladLoadGL();
@@ -62,9 +65,11 @@ namespace HC {
 
         glm::mat4 trans = glm::mat4(1.0f);
 
-        Chunk chunk;
-        chunk.Initialize();
         SetupInput();
+
+        chunkManager->Initialize();
+
+
 
 
         textureData->Free();
@@ -82,10 +87,15 @@ namespace HC {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             program.Use();
-            chunk.Draw();
+            chunkManager->Draw();
+            lastRayCastBlock = chunkManager->ChunkRayCast(camera->GetPosition(), camera->GetForward(), 100.f);
 
             window->ImGUIRender();
 
+
+            Guizmo::GetInstance()->DrawCube(lastRayCastBlock, lastRayCastBlock + glm::vec3({1.f, 1.f, 1.f}), {1.f, 0.f, 0.f});
+            //Guizmo::GetInstance()->DrawLine(camera->GetPosition()+glm::vec3(0,-0.1,0), camera->GetPosition() + camera->GetForward() * 10.f, {1.f, 0.f, 0.f});
+            Guizmo::GetInstance()->ProcessDraw();
             glfwSwapBuffers(window->GetGLFWWindow());
 
             /* Calculate delta time */
@@ -102,11 +112,12 @@ namespace HC {
 
     }
 
-    App::App() {
+    App::App(){
         window = std::make_unique<Window>(800, 600, "OpenGL Test 2");
         inputManager = std::make_unique<InputManager>(window->GetGLFWWindow());
         camera = std::make_unique<Camera>();
         window->SetAppContext(this);
+        chunkManager = std::make_unique<ChunkManager>();
 
     }
 
@@ -174,6 +185,10 @@ namespace HC {
 
         inputManager->AddKeyboardCallback(GLFW_KEY_Q, KeyboardAction::VP_KEY_REPEAT, this, [&]() {
             camera->Move(CameraMovement::DOWN);
+        });
+
+        inputManager->AddMouseCallback(GLFW_MOUSE_BUTTON_LEFT, MouseAction::VP_MOUSE_PRESSED, this, [&](glm::vec2 offset) {
+            chunkManager->SetBlockAt(lastRayCastBlock, 0);
         });
 
         inputManager->AddMouseCallback(0, MouseAction::VP_MOUSE_MOVE, this, [&](glm::vec2 pos) {

@@ -31,6 +31,8 @@ namespace HC {
     public:
         Model(const std::vector<Vertex> &vertices, const std::vector<GLuint> &indices, const std::shared_ptr<TextureData>& textureDataObject = nullptr);
 
+        void SetMode(GLuint mode) {draw_mode = mode;}
+
         ~Model();
 
         void Draw();
@@ -67,6 +69,8 @@ namespace HC {
         GLuint VBO, VAO, EBO;
 
         GLuint texture = 0;
+
+        GLuint draw_mode = GL_TRIANGLES;
 
     };
 

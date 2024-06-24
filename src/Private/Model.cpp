@@ -29,9 +29,10 @@ namespace HC {
             BindTexture();
 
         if(bUsingIndexBuffer)
-            glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+            glDrawElements(draw_mode, indexCount, GL_UNSIGNED_INT, 0);
         else
-            glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+            glDrawArrays(draw_mode, 0, vertexCount);
+
 
     }
 
