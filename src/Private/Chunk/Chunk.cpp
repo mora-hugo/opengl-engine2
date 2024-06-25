@@ -155,6 +155,7 @@ namespace HC {
         }
         bIsDirty = true;
         blocks[GET_CUBE(x, y, z)] = block;
+        blockModified[GET_CUBE(x, y, z)] = block;
     }
 
 

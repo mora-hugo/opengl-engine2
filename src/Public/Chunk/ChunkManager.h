@@ -5,7 +5,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/hash.hpp>
 #include "Chunk.h"
-using Block = uint8_t;
+using Block = uint16_t;
 namespace HC {
     class Chunk;
     class ChunkManager {

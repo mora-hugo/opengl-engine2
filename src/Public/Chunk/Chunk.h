@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <array>
+#include <map>
 #include "Model.h"
 #include "ChunkManager.h"
 #define CHUNK_SIZE 16
@@ -10,7 +11,7 @@
 #define GET_CUBE(x, y, z) ((x) + (z) * CHUNK_SIZE + (y) * (CHUNK_SIZE*CHUNK_SIZE))
 #define GET_COORDS_FROM_INDEX(index) glm::ivec3((index) % CHUNK_SIZE, (index) / (CHUNK_SIZE*CHUNK_SIZE), ((index) / CHUNK_SIZE) % CHUNK_SIZE)
 
-using Block = uint8_t;
+using Block = uint16_t;
 namespace HC {
     class ChunkManager;
     class Chunk {
@@ -27,6 +28,7 @@ namespace HC {
 
     protected:
         std::array<Block, CHUNK_SIZE_CUBED> blocks;
+        std::map<size_t, Block> blockModified;
         glm::ivec2 position;
 
     private:
