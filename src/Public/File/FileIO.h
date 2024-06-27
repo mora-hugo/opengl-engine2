@@ -4,23 +4,45 @@
 #include "windows.h"
 
 namespace HC {
-    class FileIO {
+    class File {
     public:
-        FileIO(const std::string& path);
-        ~FileIO();
+        File(const std::string& path);
+        ~File() = default;
+        virtual bool IsOpen() = 0;
 
-        void Write(const uint8_t* data, size_t size);
-        void Read(const uint8_t* data, size_t size);
+        size_t GetFileContentSize() const;
 
-
-        void CloseFile();
-
+        virtual void CloseFile() = 0;
+        inline std::string GetFilePath() const {return filepath;}
     protected:
-        void OpenFile(const std::string& path);
+        virtual void OpenFile() = 0;
+    protected:
+        std::string filepath;
+
+    };
+
+    class FileReader : public File {
+    public:
+        FileReader(const std::string& path);
+        void OpenFile() override;
+        void CloseFile() override;
+        void Read(uint8_t *data, size_t size);
+        bool IsOpen() override;
 
     private:
-        std::fstream file;
+        std::ifstream file;
+    };
 
+    class FileWriter : public File {
+    public:
+        FileWriter(const std::string& path);
+
+        void OpenFile() override;
+        void CloseFile() override;
+        void Write(const uint8_t* data, size_t size);
+        bool IsOpen() override;
+    private:
+        std::ofstream file;
     };
 }
 

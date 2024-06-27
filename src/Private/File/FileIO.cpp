@@ -5,44 +5,81 @@
 #include <fstream>
 #include <windows.h>
 #include <filesystem>
+#include <vector>
 #include "File/FileIO.h"
 
-HC::FileIO::FileIO(const std::string &path)
+HC::File::File(const std::string &path) : filepath(path)
 {
-    OpenFile(path);
 }
 
 
-HC::FileIO::~FileIO() {
-    CloseFile();
+
+
+
+
+
+
+
+size_t HC::File::GetFileContentSize() const {
+    if(!std::filesystem::exists(filepath)) {
+        std::cerr << "File " << filepath <<" does not exist" << std::endl;
+        return 0;
+    }
+    return std::filesystem::file_size(filepath);
+
 }
 
-void HC::FileIO::OpenFile(const std::string &path) {
-    file = std::fstream(path, std::ios::in | std::ios::out | std::ios::app);
+HC::FileReader::FileReader(const std::string& path) : File(path) {
 
-    if (!file.is_open()) {
+}
+
+void HC::FileReader::Read(uint8_t *data, size_t size) {
+    file.read(reinterpret_cast<char*>(data), size);
+}
+
+void HC::FileReader::OpenFile() {
+    try {
+        file = std::ifstream(filepath, std::ios::binary);
+    }
+    catch (std::exception& e) {
+        std::cerr << e.what() << std::endl;
+    }
+    if (!IsOpen()) {
+        std::cerr << "Failed to open file \""<< filepath << "\"" << std::endl;
+    }
+
+}
+
+void HC::FileReader::CloseFile() {
+    if(IsOpen())
+        file.close();
+}
+
+bool HC::FileReader::IsOpen() {
+    return file.is_open();
+}
+
+HC::FileWriter::FileWriter(const std::string& filepath)  : File(filepath) {
+
+}
+
+void HC::FileWriter::OpenFile() {
+    file = std::ofstream(filepath);
+    if (!IsOpen()) {
         std::cerr << "Failed to open file" << std::endl;
     }
 }
 
-void HC::FileIO::CloseFile() {
-    if (file.is_open())
+void HC::FileWriter::CloseFile() {
+    if(IsOpen())
         file.close();
-
 }
 
-void HC::FileIO::Write(const uint8_t *data, size_t size) {
+
+void HC::FileWriter::Write(const uint8_t *data, size_t size) {
     file.write(reinterpret_cast<const char*>(data), size);
 }
 
-void HC::FileIO::Read(const uint8_t *data, size_t size) {
-    file.read(reinterpret_cast<char*>(const_cast<uint8_t*>(data)), size);
+bool HC::FileWriter::IsOpen() {
+    return file.is_open();
 }
-
-
-
-
-
-
-
-
