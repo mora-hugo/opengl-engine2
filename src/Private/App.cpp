@@ -33,7 +33,6 @@ namespace HC {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_FRONT);
         //Max fps
-        Test::testIndices();
         glfwSwapInterval(1);
         Shaders shaders("../src/Shaders/vertex.glsl", "../src/Shaders/fragment.glsl");
 
@@ -104,6 +103,8 @@ namespace HC {
 
 
         }
+
+        chunkManager->DebugSaveAll();
 
     }
 
@@ -205,7 +206,7 @@ namespace HC {
         });
 
         inputManager->AddMouseCallback(GLFW_MOUSE_BUTTON_RIGHT, MouseAction::VP_MOUSE_PRESSED, this, [&](glm::vec2 offset) {
-            chunkManager->SetBlockAt(lastRayCastBlock+lastHitBlockNormal, 1);
+            chunkManager->SetBlockAt(lastRayCastBlock+lastHitBlockNormal, 5);
         });
 
         inputManager->AddMouseCallback(0, MouseAction::VP_MOUSE_MOVE, this, [&](glm::vec2 pos) {

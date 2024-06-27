@@ -111,6 +111,12 @@ void HC::ChunkManager::SetBlockAt(const glm::ivec3 &position, Block block) {
 
 }
 
+void HC::ChunkManager::DebugSaveAll() {
+    for (auto& chunk : chunks) {
+        chunk.second->Save();
+    }
+}
+
 
 
 

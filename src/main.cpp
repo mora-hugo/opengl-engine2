@@ -4,9 +4,9 @@
 #include "Ressources/ResourceManager.h"
 int main()
 {
-    //HC::App app;
+    HC::App app;
 
-    //app.Run();
+    app.Run();
     /*
     HC::FileIO file("../ez.txt");
     std::array<uint8_t, 2> v {10,24};
@@ -14,10 +14,7 @@ int main()
     file.CloseFile();
      */
 
-    auto manager = HC::ResourceManager::GetInstance();
-    auto ez = manager->Load<HC::FileResource>("../yolerap.txt");
-    ez->bytes = {'c','o','u','c','o','z'};
-    ez->Save();
+
     return 0;
 }
 

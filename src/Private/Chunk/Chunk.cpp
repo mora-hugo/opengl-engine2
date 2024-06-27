@@ -18,6 +18,8 @@ namespace HC {
             }
         }
         GenerateVerticesAndIndices();
+        if(!chunkFile)
+            TryGetChunkOnDisk();
         model = std::make_unique<Model>(vec, my_indices);
     }
 
@@ -156,6 +158,35 @@ namespace HC {
         bIsDirty = true;
         blocks[GET_CUBE(x, y, z)] = block;
         blockModified[GET_CUBE(x, y, z)] = block;
+    }
+
+    void Chunk::TryGetChunkOnDisk() {
+        auto manager = HC::ResourceManager::GetInstance();
+        chunkFile = manager->Load<ChunkResource>("../resources/chunks/" + std::to_string(position.x) + "_" + std::to_string(position.y) + ".chunk");
+        if(chunkFile) {
+            for(auto & pair : chunkFile->blocks) {
+                SetBlockAt(pair.first, pair.second);
+            }
+        }
+    }
+
+    void Chunk::SetBlockAt(int index, Block block) {
+        if (index < 0 || index >= CHUNK_SIZE_CUBED) {
+            return;
+        }
+        bIsDirty = true;
+        blocks[index] = block;
+        blockModified[index] = block;
+
+    }
+
+    void Chunk::Save() {
+        chunkFile = ResourceManager::GetInstance()->Load<ChunkResource>("../resources/chunks/" + std::to_string(position.x) + "_" + std::to_string(position.y) + ".chunk");
+        chunkFile->blocks = blockModified;
+        if(blockModified.size() > 0) {
+            std::cout << "yes" << std::endl;
+        }
+        chunkFile->Save();
     }
 
 

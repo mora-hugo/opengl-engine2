@@ -7,9 +7,11 @@
 #include <vector>
 #include "File/FileIO.h"
 #include "Patterns/Singleton.h"
+#include "Chunk/Chunk.h"
+#include "Chunk/ChunkManager.h"
 
 namespace HC {
-
+    using Block = uint16_t;
     class IResource {
     public:
         explicit IResource(const std::string& filepath) : filepath(filepath) { }
@@ -60,6 +62,39 @@ namespace HC {
     private:
         FileWriter writer;
         FileReader reader;
+
+
+    };
+
+    class ChunkResource : public FileResource {
+    public:
+        ChunkResource(const std::string& filepath) : FileResource(filepath) { }
+        bool Load() override{
+            bool bSuccess = FileResource::Load();
+            if(bSuccess) {
+                for(size_t i = 0; i < bytes.size(); i+=4) {
+                    uint16_t position;
+                    Block block;
+                    memcpy(&position, bytes.data() + i, sizeof(uint16_t));
+                    memcpy(&block, bytes.data() + i+2, sizeof(Block));
+                    blocks[position] = block;
+                }
+            }
+
+            return bSuccess;
+        }
+
+        bool Save() override {
+            bytes.clear();
+            for(auto& [position, block] : blocks) {
+                bytes.push_back((uint8_t)(position & 0xFF));
+                bytes.push_back((uint8_t)(position >> 8));
+                bytes.push_back((uint8_t)(block & 0xFF));
+                bytes.push_back((uint8_t)(block >> 8));
+            }
+            return FileResource::Save();
+        }
+        std::map<uint16_t, Block> blocks;
 
 
     };

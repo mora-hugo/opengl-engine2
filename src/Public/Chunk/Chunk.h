@@ -5,6 +5,8 @@
 #include <map>
 #include "Model.h"
 #include "ChunkManager.h"
+#include "Ressources/ResourceManager.h"
+
 #define CHUNK_SIZE 16
 #define CHUNK_SIZE_HEIGHT 128
 #define CHUNK_SIZE_CUBED (CHUNK_SIZE * CHUNK_SIZE_HEIGHT * CHUNK_SIZE)
@@ -25,11 +27,17 @@ namespace HC {
         void Draw();
         [[nodiscard]] Block GetBlockAt(int x, int y, int z) const;
         void SetBlockAt(int x, int y, int z, Block block);
+        void SetBlockAt(int index , Block block);
+        void Save();
+
+    protected:
+        void TryGetChunkOnDisk();
 
     protected:
         std::array<Block, CHUNK_SIZE_CUBED> blocks;
-        std::map<size_t, Block> blockModified;
+        std::map<uint16_t, Block> blockModified;
         glm::ivec2 position;
+        std::shared_ptr<ChunkResource> chunkFile;
 
     private:
         const ChunkManager& chunkManager;

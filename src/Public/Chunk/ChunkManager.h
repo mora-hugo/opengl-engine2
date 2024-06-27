@@ -17,7 +17,7 @@ namespace HC {
         bool ChunkRayCast(const glm::vec3 &origin, const glm::vec3 &direction, float maxDistance, glm::vec3 & outHitPos, glm::vec3 & outHitNormal);
         uint32_t GetChunkCount() const { return chunks.size(); }
         void SetBlockAt(const glm::ivec3& position, Block block);
-
+        void DebugSaveAll();
         [[nodiscard]] Block GetWorldBlockAt(int x, int y, int z) const;
 
     protected:
